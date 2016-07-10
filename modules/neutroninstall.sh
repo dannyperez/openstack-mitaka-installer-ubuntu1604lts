@@ -118,9 +118,7 @@ else
 	if [ $vpnaasinstall == "yes" ]
 	then
 		DEBIAN_FRONTEND=noninteractive aptitude -y install neutron-vpn-agent \
-			openswan \
-			openswan-modules-dkms \
-			python-neutron-vpnaas
+			strongswan strongswan-ikev2 python-neutron-vpnaas
 	fi
 
 	if [ $neutronmetering == "yes" ]
@@ -416,9 +414,9 @@ then
 	crudini --set /etc/neutron/vpn_agent.ini DEFAULT ovs_use_veth True
 	crudini --set /etc/neutron/vpn_agent.ini DEFAULT use_namespaces True
 	crudini --set /etc/neutron/vpn_agent.ini DEFAULT external_network_bridge ""
-	crudini --set /etc/neutron/vpn_agent.ini vpnagent vpn_device_driver "neutron_vpnaas.services.vpn.device_drivers.ipsec.OpenSwanDriver"
+	crudini --set /etc/neutron/vpn_agent.ini vpnagent vpn_device_driver "neutron.services.vpn.device_drivers.strongswan_ipsec.StrongSwanDriver"
 	crudini --set /etc/neutron/vpn_agent.ini ipsec ipsec_status_check_interval 60
-	crudini --set /etc/neutron/neutron_vpnaas.conf service_providers service_provider "VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVPNDriver:default"
+	crudini --set /etc/neutron/neutron_vpnaas.conf service_providers service_provider "VPN:strongswan:neutron.services.vpn.device_drivers.strongswan_ipsec.StrongSwanDriver:default"
 fi
  
 if [ $neutronmetering == "yes" ]
